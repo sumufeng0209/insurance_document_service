@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.java.dao.DocumentMapper">
+    <select id="findByConditions" parameterType="map" resultType="map">
+        SELECT * FROM documents d,fixed_loss_type f,type_of_insurance t where d.insurance_id = t.insurance_id AND d.type_id = f.fixed_loss_id
+            <if test="documents_name != null and documents_name != ''">
+                and documents_name like concat('%',#{documents_name},'%')
+            </if>
+            <if test="insurance_id != null and insurance_id != ''">
+                and d.insurance_id = #{insurance_id}
+            </if>
+            <if test="type_id != null and type_id != ''">
+                and type_id = #{type_id}
+            </if>
+            <if test="is_requried != null and is_requried != ''">
+                and is_requried = #{is_requried}
+            </if>
+        limit #{pageIndex},#{pageSize}
+    </select>
+    <select id="findCountByConditions" resultType="integer">
+        select count(*) from documents where 1 = 1
+            <if test="documents_name != null and documents_name != ''">
+                and documents_name like concat('%',#{documents_name},'%')
+            </if>
+            <if test="insurance_id != null and insurance_id != ''">
+                and insurance_id = #{insurance_id}
+            </if>
+            <if test="type_id != null and type_id != ''">
+                and type_id = #{type_id}
+            </if>
+            <if test="is_requried != null and is_requried != ''">
+                and is_requried = #{is_requried}
+            </if>
+    </select>
+
+    <insert id="add" parameterType="map">
+        insert into documents values (uuid(),#{documents_name},#{insurance_id},#{type_id},#{is_requried})
+    </insert>
+
+    <update id="update" parameterType="map">
+        update documents set
+            documents_name = #{documents_name},
+            insurance_id = #{insurance_id},
+            type_id = #{type_id},
+            is_requried = #{is_requried}
+        where documents_id = #{documents_id}
+    </update>
+    <delete id="delete">
+        delete from documents where documents_id = #{documents_id}
+    </delete>
+
+</mapper>

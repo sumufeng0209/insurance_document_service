@@ -1,0 +1,26 @@
+form{
+    padding: 55px 10px;
+    height: 150px;
+}
+.layui-input-block{
+    padding-left: 500px;
+}
+#add{
+    margin-left: 1450px;
+}
+.layui-form-label{
+    width: 120px;
+}
+#documents_name{
+    width: 215px;
+}
+#pageDiv{
+    width: 150px;
+    margin:0 auto;
+}
+#submitDiv{
+    width: 60px;
+    position: absolute;
+    right: 150px;
+    top: 55px;
+}
