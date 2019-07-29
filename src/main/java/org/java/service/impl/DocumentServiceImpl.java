@@ -1,10 +1,16 @@
 package org.java.service.impl;
 
+import org.activiti.engine.TaskService;
+import org.activiti.engine.task.Task;
+import org.activiti.engine.task.TaskQuery;
 import org.java.dao.DocumentMapper;
 import org.java.service.DocumentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.ServletOutputStream;
+import java.io.InputStream;
+import java.sql.Blob;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +19,8 @@ import java.util.Map;
 public class DocumentServiceImpl implements DocumentService {
     @Autowired
     private DocumentMapper documentMapper;
+    @Autowired
+    private TaskService taskService;
     @Override
     public Map<String,Object> findByConditions(Map<String, Object> map) {
         int pageIndex = 1;
@@ -51,12 +59,50 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     public void update(Map<String, Object> map) {
-        System.out.println(map);
         documentMapper.update(map);
     }
 
     @Override
     public void delete(String documents_id) {
         documentMapper.delete(documents_id);
+    }
+
+    @Override
+    public Map<String,Object> showReportCase(String schedule_type_id) {
+        Map<String,Object> dataMap = new HashMap<>();
+        List<Map<String,Object>> list = documentMapper.findByScheduleTypeId(schedule_type_id);
+        dataMap.put("code",0);
+        dataMap.put("msg","");
+        dataMap.put("count",list.size());
+        dataMap.put("data",list);
+        return dataMap;
+    }
+
+    @Override
+    public void addFile(Map<String, Object> map) {
+        documentMapper.addFile(map);
+    }
+
+    @Override
+    public Map<String, Object> showDocumentFile(String compensate_case_id) {
+        Map<String,Object> dataMap = new HashMap<>();
+        List<Map<String,Object>> list = documentMapper.findDocumentFileByCompensateCaseId(compensate_case_id);
+        dataMap.put("code",0);
+        dataMap.put("msg","");
+        dataMap.put("count",list.size());
+        dataMap.put("data",list);
+        return dataMap;
+    }
+
+    @Override
+    public void showDocumentImage(String file_id,ServletOutputStream outputStream){
+        Map<String,Object> map = documentMapper.findDocumentFileByFileId(file_id);
+        byte[] files = (byte[]) map.get("file_object");
+        try {
+            outputStream.write(files);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 }

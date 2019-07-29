@@ -15,4 +15,8 @@ public interface DocumentMapper {
     void update(Map<String,Object> map);
     void add(Map<String,Object> map);
     void delete(@Param("documents_id") String documents_id);
+    List<Map<String,Object>> findByScheduleTypeId(@Param("schedule_type_id") String schedule_type_id);
+    void addFile(Map<String,Object> map);
+    List<Map<String,Object>> findDocumentFileByCompensateCaseId(@Param("compensate_case_id") String compensate_case_id);
+    Map<String,Object> findDocumentFileByFileId(@Param("file_id") String file_id);
 }

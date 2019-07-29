@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="js/jquery-1.12.4.js"></script>
+    <link href="bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <script src="bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+    <link href="layui/css/layui.css" rel="stylesheet" type="text/css">
+    <script src="layui/layui.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/showNuclearDamage.css">
+    <script type="text/html" id="toolbarDemo">
+        <div class="layui-upload">
+            <a type="button" lay-event="getCheckData" class="layui-btn layui-btn-primary layui-btn-sm">上传单证</a>
+        </div>
+    </script>
+    <script type="text/html" id="edit1">
+        <div lay-event="upDocument">
+            <a type="button" id="showDocument" lay-event="showDocument" class="layui-btn layui-btn-primary layui-btn-sm">显示单证信息</a>
+        </div>
+    </script>
+    <script type="text/html" id="edit2">
+        <div lay-event="upDocument">
+            <a type="button" lay-event="showImage" class="layui-btn layui-btn-primary layui-btn-sm">查看上传图片</a>
+        </div>
+    </script>
+
+    <script type="text/html" id="documentFileContent">
+        <table class="layui-table" id="showDocumentFileTable" lay-filter="showDocumentFileTable">
+
+        </table>
+    </script>
+
+
+</head>
+<body>
+<form class="bs-example bs-example-form" role="form" >
+    <div class="form-group" style="margin: 20px 320px;">
+        <input type="hidden" id="schedule_type_id" th:value="${schedule_type_id}">
+        <input type="hidden" id="documents_id" th:value="${documents_id}">
+        <input type="hidden" id="up_compensate_case_id">
+        <div class="input-group">
+            <span class="input-group-addon">赔案编号:</span>
+            <input type="text" class="form-control" name="compensate_case_id" id="compensate_case_id">
+        </div>
+    </div>
+
+    <div style="float: right;margin: -64px 320px;" class="form-group">
+
+        <div class="input-group">
+            <span class="input-group-addon">车牌号:</span>
+            <input type="text" class="form-control" name="car_name" id="car_name" maxlength="7"/>
+        </div>
+
+
+    </div>
+
+    <div style="width: 100px;margin: 0 auto;" class="form-group">
+        <button style="width: 100px;" type="button" class="btn btn-default" data-dismiss="modal">查询</button>
+    </div>
+</form>
+
+<button hidden type="button" class="layui-btn" id="test3"><i class="layui-icon"></i>上传文件</button>
+
+
+<table class="layui-table" id="showReportCase" lay-filter="showReportCase">
+
+</table>
+</body>
+<script>
+    var form;
+    var table;
+    var upload;
+    layui.use(['form','table','upload'],function(){
+        form = layui.form;
+        form.render();
+        table = layui.table;
+        upload = layui.upload;
+        showData();
+
+
+    });
+    //渲染表格,显示数据
+    function showData(){
+        table.render({
+            elem: '#showReportCase'
+            ,url:'showReportCase?schedule_type_id=' + $("#schedule_type_id").val()
+            ,cols: [
+                [
+                    {type:'radio'}
+                ,{field:'compensate_case_id',title: '赔案编号',align : 'center'}
+                ,{field:'schedule_id',title: '报案编号',align : 'center'}
+                ,{field:'car_number',title: '车牌号',align : 'center'}
+                ,{field:'report_a_case_person_name',title: '报案人姓名',align : 'center'}
+                ,{field:'insured_truename',title: '被保险人',align : 'center'}
+                ,{fixed: 'right', title:'操作',align : 'center', toolbar: '#edit1'}
+
+            ]
+            ]
+            ,page: true
+        });
+
+        table.on('tool(showReportCase)', function(obj){
+            var event = obj.event;
+            var data = obj.data;
+            if (event === "showDocument"){
+                layer.open({
+                    type: 1,
+                    title:"显示单证文件",
+                    offset: 'auto',
+                    area: ['1000px','500px'],
+                    content: $("#documentFileContent").html()
+                });
+                table.render({
+                    elem: '#showDocumentFileTable'
+                    ,url:'showDocumentFile?compensate_case_id=' + data.compensate_case_id
+                    ,cols: [
+                        [
+                            {field:'file_id',title: '文件编号',align : 'center'}
+                            ,{field:'documents_id',title: '单证编号',align : 'center'}
+                            ,{field:'documents_name',title: '单证名称',align : 'center'}
+                            ,{fixed: 'right', title:'操作',align : 'center', toolbar: '#edit2'}
+                        ]
+                    ]
+                    ,page: true
+                });
+                table.on('tool(showDocumentFileTable)', function(obj){
+                    var data = obj.data; //获取选中行状态
+                    if (obj.event === "showImage"){
+                        location.href = "showDocumentFileImage?file_id="+data.file_id;
+                    }
+                });
+            }
+        });
+        table.on('radio', function(obj){
+            var data = obj.data; //获取选中行状态
+            $("#up_compensate_case_id").val(data.compensate_case_id);
+            upload.render({
+                elem: '#test3'
+                ,url: 'upDocument?compensate_case_id='+$("#up_compensate_case_id").val()+"&documents_id="+$("#documents_id").val()
+                ,accept: 'file' //普通文件
+                ,done: function(res){
+                    layer.alert("上传成功！");
+                }
+            });
+        });
+    }
+
+
+
+
+</script>
+</html>

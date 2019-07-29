@@ -48,5 +48,23 @@
     <delete id="delete">
         delete from documents where documents_id = #{documents_id}
     </delete>
+    
+    <select id="findByScheduleTypeId" resultType="map">
+        SELECT * FROM `schedule` s,compensate_case cc,report_a_case rac WHERE s.compensate_case_id = cc.compensate_case_id AND cc.compensate_case_id = rac.compensate_case_id AND schedule_type_id = #{schedule_type_id}
+    </select>
+
+    <insert id="addFile" parameterType="map">
+        insert into document_file values(uuid(),#{documents_id},#{compensate_case_id},#{file_object,jdbcType=BINARY})
+    </insert>
+
+    <select id="findDocumentFileByCompensateCaseId" resultType="map">
+        SELECT * FROM document_file df,documents d
+        WHERE df.documents_id = d.documents_id
+        and df.compensate_case_id = #{compensate_case_id}
+    </select>
+    
+    <select id="findDocumentFileByFileId" resultType="map">
+        select * from document_file where file_id = #{file_id}
+    </select>
 
 </mapper>
