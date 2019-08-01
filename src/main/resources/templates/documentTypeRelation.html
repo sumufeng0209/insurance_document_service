@@ -45,15 +45,7 @@
                     <option value="2">人伤定损</option>
                     <option value="3">物损定损</option>
                     <option value="4">盗抢定损</option>
-                    <option value="5">现场查勘</option>
                 </select>
-            </div>
-        </div>
-        <div class="layui-input-inline">
-            <label class="layui-form-label">是否必须:</label>
-            <div class="layui-input-inline">
-                <input style="width: 150px;" type="radio" name="is_requried" value="1" title="是" checked="">
-                <input style="width: 150px;" type="radio" name="is_requried" value="0" title="否">
             </div>
         </div>
         <button id="add" style="margin-left: 1210px;" onclick="addForm();" data-toggle="modal" data-target="#myModal" type="button" class="btn btn-default">增加</button>
@@ -227,7 +219,6 @@
         function upDocument(obj) {
             var schedule_type_id = $(obj).siblings(".type_id").text();
             var documents_id = $(obj).siblings(".documents_id").text();
-            alert(schedule_type_id);
             location.href = "loadUpDocument?schedule_type_id=" + schedule_type_id + "&documents_id=" + documents_id;
         }
     </script>

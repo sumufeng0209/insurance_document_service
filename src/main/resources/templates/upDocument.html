@@ -89,7 +89,6 @@
                 [
                     {type:'radio'}
                 ,{field:'compensate_case_id',title: '赔案编号',align : 'center'}
-                ,{field:'schedule_id',title: '报案编号',align : 'center'}
                 ,{field:'car_number',title: '车牌号',align : 'center'}
                 ,{field:'report_a_case_person_name',title: '报案人姓名',align : 'center'}
                 ,{field:'insured_truename',title: '被保险人',align : 'center'}
@@ -134,16 +133,22 @@
         });
         table.on('radio', function(obj){
             var data = obj.data; //获取选中行状态
-            $("#up_compensate_case_id").val(data.compensate_case_id);
+            var compensate_case_id = $("#up_compensate_case_id").val(data.compensate_case_id);
+            upFile(compensate_case_id);
+        });
+        
+        function upFile(compensate_case_id) {
             upload.render({
                 elem: '#test3'
                 ,url: 'upDocument?compensate_case_id='+$("#up_compensate_case_id").val()+"&documents_id="+$("#documents_id").val()
                 ,accept: 'file' //普通文件
                 ,done: function(res){
-                    layer.alert("上传成功！");
+                    layer.alert("上传成功！",function () {
+                        location.reload();
+                    });
                 }
             });
-        });
+        }
     }
 
 

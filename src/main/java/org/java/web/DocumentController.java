@@ -52,7 +52,15 @@ public class DocumentController {
 
     @RequestMapping("loadUpDocument")
     public String loadUpDocument(String schedule_type_id,String documents_id,Model model){
-        model.addAttribute("schedule_type_id",schedule_type_id);
+        String schedule_type_name = "is_vehicle_damage";
+        if (schedule_type_id.equals("2")){
+            schedule_type_name = "is_human_injury";
+        }else if (schedule_type_id.equals("3")){
+            schedule_type_name = "is_material_damage";
+        }else if (schedule_type_id.equals("4")){
+            schedule_type_name = "is_whether_to_steal_or_not";
+        }
+        model.addAttribute("schedule_type_id",schedule_type_name);
         model.addAttribute("documents_id",documents_id);
         return "upDocument";
     }
@@ -60,7 +68,6 @@ public class DocumentController {
     @RequestMapping("showReportCase")
     @ResponseBody
     public Map<String, Object> showReportCase(String schedule_type_id){
-
         return documentService.showReportCase(schedule_type_id);
     }
 

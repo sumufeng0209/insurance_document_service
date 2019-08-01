@@ -50,7 +50,19 @@
     </delete>
     
     <select id="findByScheduleTypeId" resultType="map">
-        SELECT * FROM `schedule` s,compensate_case cc,report_a_case rac WHERE s.compensate_case_id = cc.compensate_case_id AND cc.compensate_case_id = rac.compensate_case_id AND schedule_type_id = #{schedule_type_id}
+        SELECT * FROM compensate_case cc,report_a_case rac where cc.compensate_case_id = rac.compensate_case_id
+        <if test="schedule_type_id == 'is_vehicle_damage'">
+            and is_vehicle_damage = '是'
+        </if>
+        <if test="schedule_type_id == 'is_human_injury'">
+            and is_human_injury = '是'
+        </if>
+        <if test="schedule_type_id == 'is_material_damage'">
+            and is_material_damage = '是'
+        </if>
+        <if test="schedule_type_id == 'is_whether_to_steal_or_not'">
+            and is_whether_to_steal_or_not = '是'
+        </if>
     </select>
 
     <insert id="addFile" parameterType="map">
